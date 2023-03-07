@@ -1,6 +1,7 @@
 package com.tomerharari.recipeapp.services;
 
 import com.tomerharari.recipeapp.commands.RecipeCommand;
+import com.tomerharari.recipeapp.commands.IngredientCommand;
 import com.tomerharari.recipeapp.converters.RecipeCommandToRecipe;
 import com.tomerharari.recipeapp.converters.RecipeToRecipeCommand;
 import com.tomerharari.recipeapp.model.Recipe;
@@ -52,6 +53,20 @@ public class RecipeServiceImpl implements RecipeService {
         Recipe savedConvertedRecipeCommand = recipeRepository.save(convertedRecipeCommand);
         log.debug("Saved RecipeId: " + savedConvertedRecipeCommand.getId() );
         return recipeToRecipeCommand.convert(savedConvertedRecipeCommand);
+
+    }
+    @Override
+    @Transactional
+    public RecipeCommand findCommandById(Long id) {
+        return recipeToRecipeCommand.convert(findById(id));
+    }
+    @Override
+    public void deleteById(Long id) {
+        recipeRepository.deleteById(id);
+    }
+    @Override
+    public IngredientCommand findRecipeIngredientById(Long recipeId, Long id) {
+        return findCommandById(recipeId).getIngredients().stream().filter(ingredientCommand -> ingredientCommand.getId() == id).findFirst().orElse(null);
 
     }
 }
