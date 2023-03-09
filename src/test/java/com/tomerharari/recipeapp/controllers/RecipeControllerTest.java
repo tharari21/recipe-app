@@ -1,7 +1,9 @@
 package com.tomerharari.recipeapp.controllers;
 
 import com.tomerharari.recipeapp.commands.RecipeCommand;
+import com.tomerharari.recipeapp.exceptions.NotFoundException;
 import com.tomerharari.recipeapp.model.Recipe;
+import com.tomerharari.recipeapp.services.CategoryService;
 import com.tomerharari.recipeapp.services.ImageService;
 import com.tomerharari.recipeapp.services.RecipeService;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,15 +29,18 @@ public class RecipeControllerTest {
     RecipeService recipeService;
     @Mock
     ImageService imageService;
+    @Mock
+    CategoryService categoryService;
 
     RecipeController controller;
 
     MockMvc mockMvc;
 
+
     @BeforeEach
     public void setUp() throws Exception {
 
-        controller = new RecipeController(recipeService, imageService);
+        controller = new RecipeController(recipeService, imageService, categoryService);
         mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
     }
 
@@ -51,6 +56,13 @@ public class RecipeControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("recipe/show"))
                 .andExpect(model().attributeExists("recipe"));
+    }
+    @Test
+    public void testGetRecipeNotFound() throws Exception {
+        when(recipeService.findById(anyLong())).thenThrow(NotFoundException.class);
+
+        mockMvc.perform(get("/recipe/1/show"))
+                .andExpect(status().isNotFound());
     }
 
     @Test

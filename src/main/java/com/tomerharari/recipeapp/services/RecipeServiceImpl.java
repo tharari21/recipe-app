@@ -4,6 +4,7 @@ import com.tomerharari.recipeapp.commands.RecipeCommand;
 import com.tomerharari.recipeapp.commands.IngredientCommand;
 import com.tomerharari.recipeapp.converters.RecipeCommandToRecipe;
 import com.tomerharari.recipeapp.converters.RecipeToRecipeCommand;
+import com.tomerharari.recipeapp.exceptions.NotFoundException;
 import com.tomerharari.recipeapp.model.Recipe;
 import com.tomerharari.recipeapp.repositories.RecipeRepository;
 import jakarta.transaction.Transactional;
@@ -40,8 +41,7 @@ public class RecipeServiceImpl implements RecipeService {
     @Override
     public Recipe findById(Long id) {
         Optional<Recipe> recipe = recipeRepository.findById(id);
-        return recipe.orElse(null);
-
+        return recipe.orElseThrow(() -> new NotFoundException("Recipe Not Found"));
     }
 
     // Make it transactional because we will be c

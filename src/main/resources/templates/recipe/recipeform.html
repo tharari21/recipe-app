@@ -40,10 +40,9 @@
                   <label>Categories:</label>
                 </div>
                 <div class="col-md-9 form-group">
-                  <div class="radio">
+                  <div class="radio" th:each="category : ${categories}">
                     <label>
-                      <input type="checkbox" value=""/>
-                      Cat 1
+                      <input type="checkbox" value="" th:text="${category.description}"/>
                     </label>
                   </div>
                   <div class="radio" th:remove="all">
