@@ -1,16 +1,17 @@
 package com.tomerharari.recipeapp.controllers;
 
 import com.tomerharari.recipeapp.commands.RecipeCommand;
+import com.tomerharari.recipeapp.exceptions.NotFoundException;
 import com.tomerharari.recipeapp.services.CategoryService;
 import com.tomerharari.recipeapp.services.ImageService;
 import com.tomerharari.recipeapp.services.RecipeService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.servlet.ModelAndView;
 
 @Slf4j
 @RequestMapping("/recipe")
@@ -28,6 +29,7 @@ public class RecipeController {
 
     @GetMapping("/{id}/show")
     public String showById(@PathVariable Long id, Model model) {
+
         model.addAttribute(recipeService.findById(id));
         return "recipe/show";
     }
@@ -39,6 +41,7 @@ public class RecipeController {
     }
     @GetMapping("/{id}/update")
     public String updateRecipe(@PathVariable Long id, Model model) {
+
         model.addAttribute("recipe", recipeService.findCommandById(id));
         model.addAttribute("categories", categoryService.listAllCategories());
         return "recipe/recipeform";
@@ -55,6 +58,24 @@ public class RecipeController {
         log.debug("Deleting id: " + id);
         recipeService.deleteById(id);
         return "redirect:/";
+    }
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(NotFoundException.class)
+    public ModelAndView handleNotFound(Exception exception) {
+        log.error("Handling not found exception");
+        log.error(exception.getMessage());
+        ModelAndView mav = new ModelAndView("404error");
+        mav.addObject("exception", exception);
+        return mav;
+    }
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ModelAndView handleInvalidTypeInUrl(MethodArgumentTypeMismatchException e) {
+        log.error("Handling invalid type in URL exception");
+        log.error(e.getMessage());
+        ModelAndView mav = new ModelAndView("400error");
+        mav.addObject("exception", e);
+        return mav;
     }
 
 }
