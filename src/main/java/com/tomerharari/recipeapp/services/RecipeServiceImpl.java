@@ -39,9 +39,9 @@ public class RecipeServiceImpl implements RecipeService {
         return recipes;
     }
     @Override
-    public Recipe findById(String id) {
+    public Recipe findById(Long id) {
         Optional<Recipe> recipe = recipeRepository.findById(id);
-        return recipe.orElseThrow(() -> new NotFoundException("Recipe Not Found for ID Value: " + id));
+        return recipe.orElseThrow(() -> new NotFoundException("Recipe Not Found"));
     }
 
     // Make it transactional because we will be c
@@ -57,15 +57,15 @@ public class RecipeServiceImpl implements RecipeService {
     }
     @Override
     @Transactional
-    public RecipeCommand findCommandById(String id) {
+    public RecipeCommand findCommandById(Long id) {
         return recipeToRecipeCommand.convert(findById(id));
     }
     @Override
-    public void deleteById(String id) {
+    public void deleteById(Long id) {
         recipeRepository.deleteById(id);
     }
     @Override
-    public IngredientCommand findRecipeIngredientById(String recipeId, String id) {
+    public IngredientCommand findRecipeIngredientById(Long recipeId, Long id) {
         return findCommandById(recipeId).getIngredients().stream().filter(ingredientCommand -> ingredientCommand.getId() == id).findFirst().orElse(null);
 
     }

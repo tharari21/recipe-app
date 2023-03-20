@@ -28,7 +28,7 @@ public class RecipeController {
     }
 
     @GetMapping("/{id}/show")
-    public String showById(@PathVariable String id, Model model) {
+    public String showById(@PathVariable Long id, Model model) {
 
         model.addAttribute(recipeService.findById(id));
         return "recipe/show";
@@ -40,7 +40,7 @@ public class RecipeController {
         return "recipe/recipeform";
     }
     @GetMapping("/{id}/update")
-    public String updateRecipe(@PathVariable String id, Model model) {
+    public String updateRecipe(@PathVariable Long id, Model model) {
 
         model.addAttribute("recipe", recipeService.findCommandById(id));
         model.addAttribute("categories", categoryService.listAllCategories());
@@ -54,7 +54,7 @@ public class RecipeController {
         return "redirect:/recipe/"+ savedRecipeCommand.getId() + "/show"; // tells spring mvc to redirect to new url
     }
     @GetMapping("/{id}/delete")
-    public String deleteRecipe(@PathVariable String id) {
+    public String deleteRecipe(@PathVariable Long id) {
         log.debug("Deleting id: " + id);
         recipeService.deleteById(id);
         return "redirect:/";
