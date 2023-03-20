@@ -5,15 +5,14 @@ import lombok.*;
 
 import java.util.Set;
 
-@Data
-@EqualsAndHashCode(exclude = {"recipes"})
-@Entity
+
+@Getter
+@Setter
+//@EqualsAndHashCode(exclude = {"recipes"})
 public class Category {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+
+    private String id;
     private String description;
-    @ManyToMany(mappedBy = "categories")
     private Set<Recipe> recipes;
 
 }

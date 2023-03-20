@@ -1,0 +1,26 @@
+spring:
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/sfg_prod?useSSL=false&allowPublicKeyRetrieval=True
+    username: sfg_prod_user
+    password: password
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    platform: mysql
+  jpa:
+    hibernate:
+      hbm2ddl:
+        delimiter: ";"
+      ddl-auto: validate
+    database-platform: org.hibernate.dialect.MySQLDialect
+    database: mysql
+    show-sql: false
+#    properties:
+#      javax:
+#        persistence:
+#          schema-generation:
+#            create-source: metadata
+#            scripts:
+#              action: create
+#              create-target: tomer_database_create.sql
+  sql:
+    init:
+      mode: always
